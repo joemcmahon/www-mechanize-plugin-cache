@@ -1,4 +1,3 @@
-use 5.008;     
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
@@ -12,7 +11,6 @@ WriteMakefile(
     PREREQ_PM => {
         'Test::More' => 0,
         'Test::Exception' => 0,
-        'version'    => 0,
         'Data::Dump::Streamer' => 0,
         'Cache::FileCache' => 0,
         'WWW::Mechanize::Pluggable' => 0,

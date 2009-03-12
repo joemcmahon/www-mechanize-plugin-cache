@@ -1,7 +1,7 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         WWW-Mechanize-Plugin-Cache
-version:      0.02
+version:      0.03
 version_from: lib/WWW/Mechanize/Plugin/Cache.pm
 installdirs:  site
 requires:
@@ -9,7 +9,6 @@ requires:
     Data::Dump::Streamer:          0
     Test::Exception:               0
     Test::More:                    0
-    version:                       0
     WWW::Mechanize::Pluggable:     0
 
 distribution_type: module

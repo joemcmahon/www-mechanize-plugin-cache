@@ -1,6 +1,6 @@
 package WWW::Mechanize::Plugin::Cache;
 
-use version; $VERSION = '0.02';
+our $VERSION = '0.03';
 use base qw(Class::Accessor::Fast);
 __PACKAGE__->mk_accessors(qw(cache_args cache old_make_request cached));
 
