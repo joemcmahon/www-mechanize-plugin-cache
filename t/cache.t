@@ -4,7 +4,7 @@ use FindBin;
 
 BEGIN { delete @ENV{ qw( http_proxy HTTP_PROXY ) }; }
 
-use Test::More tests => 10;
+use Test::More tests => 8;
 use_ok( 'WWW::Mechanize::Pluggable' );
 
 my $agent = WWW::Mechanize::Pluggable->new(cache=>1);
@@ -31,13 +31,11 @@ SKIP: {
     $agent->get( $url );
     is($agent->status, 200, "Got first page") or diag $agent->res->message;
     is($agent->content, "Referer: ''", "First page gets sent with empty referrer");
-    is( ref $agent->uri, "", "URI shouldn't be an object #1" );
 
     $agent->get( $url );
     is($agent->status, 200, "Got second page") or diag $agent->res->message;
     isnt($agent->content, "Referer: '$url'", "Referer not sent for cached url");
     is($agent->content, "Referer: ''", "cached re-get still has empty referrer");
-    is( ref $agent->uri, "", "URI shouldn't be an object #2" );
 };
 
 SKIP: {

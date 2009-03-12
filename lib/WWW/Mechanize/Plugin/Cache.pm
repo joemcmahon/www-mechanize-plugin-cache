@@ -1,8 +1,8 @@
 package WWW::Mechanize::Plugin::Cache;
 
-our $VERSION = '0.03';
+our $VERSION = '0.05';
 use base qw(Class::Accessor::Fast);
-__PACKAGE__->mk_accessors(qw(cache_args cache old_make_request cached));
+__PACKAGE__->mk_accessors(qw(caching_initialized cache_args cache cached));
 
 use warnings;
 use strict;
@@ -26,19 +26,25 @@ sub init {
   {
     no strict 'refs';
     # Used to capture the cache arguments on the current statement.
-    *{'WWW::Mechanize::Pluggable::cache_args'} = \&cache_args;
+    *{caller(). '::cache_args'} = \&cache_args;
 
     # Whether or not a given request came from the cache.
-    *{'WWW::Mechanize::Pluggable::cached'} = \&cached;
+    *{caller(). '::cached'} = \&cached;
 
-    # Whether or not a given request came from the cache.
-    *{'WWW::Mechanize::Pluggable::cache'} = \&cache;
+    # The cache object itself.
+    *{caller(). '::cache'} = \&cache;
+
+    # Whether or not the Mech object is sufficiently set up to 
+    # allow caching to work.
+    *{caller(). '::caching_initialized'} = \&caching_initialized;
   }
 
   # Grab the arguments now, and process them later.
-  # (The Mech object we need to store the cache in
-  # doesn't exist yet.)
   $pluggable->cache_args($args{'cache'}); 
+
+  # Note that the Mech object is not yet initialized enough to
+  # support caching.
+  $pluggable->caching_initialized(0);
 
   # And we've processed this.
   return qw(cache);
@@ -95,15 +101,24 @@ sub prehook {
     my $cache_key = _make_cache_key(@_);
     my $cached = $cache->get($cache_key);
   
-  # Did we find the current request in the cache?
-    # Yes. Return it and don't call the method.
+    # Did we find the current request in the cache?
     if ($cached) {
+      if (!$pluggable->caching_initialized) {
+        $pluggable->caching_initialized(1);
+        # Commit enough surgery on the Mech object to
+        # get all of it methods to work even without a
+        # real get.
+        #
+        # Currently we're not doing anything...
+      }
+      # Yes. Return it and don't call the method.
+      $mech->get('file://.');
       $mech->update_html($cached);
       $pluggable->cached(1);
       return -1;
     }
-    # No. Go ahead and call the method.
     else {
+      # No. Go ahead and call the method.
       $pluggable->cached(0);
       return 0;
     }

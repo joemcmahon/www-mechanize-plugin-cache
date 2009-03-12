@@ -11,8 +11,6 @@ t/cache.t
 t/click.t
 t/click_button.t
 t/failure.t
-t/follow.t
-t/form.t
 t/get.t
 t/hooks.t
 t/local/LocalServer.pm
@@ -24,4 +22,5 @@ t/referer-server
 t/referer.t
 t/reload-old.t
 t/reload.t
+t/reuse.t
 t/submit.t
